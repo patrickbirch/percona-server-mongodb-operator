@@ -6,11 +6,12 @@ spec:
   #platform: openshift
   image:
   imagePullPolicy: Always
+  allowUnsafeConfigurations: false
   backup:
     enabled: true
     debug: true
     restartOnFailure: true
-    image: percona/percona-server-mongodb-operator:0.3.0-backup
+    image: perconalab/percona-server-mongodb-operator:0.4.0-backup
     coordinator:
       enableClientsLogging: true
       resources:
@@ -24,6 +25,14 @@ spec:
       #storageClass: aws-gp2
       affinity:
        antiAffinityTopologyKey: "kubernetes.io/hostname"
+    storages:
+      gcs-storage:
+        type: s3
+        s3:
+          credentialsSecret: gc-secret
+          region: us-east-1
+          bucket: operator-testing
+          endpointUrl: https://storage.googleapis.com
   mongod:
     net:
       hostPort: 0
